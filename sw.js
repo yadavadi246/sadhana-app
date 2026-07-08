@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sadhana-v3';
+const CACHE_NAME = 'sadhana-v4';
 const ASSETS = [
   './',
   './index.html',
@@ -17,7 +17,6 @@ const ASSETS = [
   './src/components/ExportModal.js',
   './src/components/ReportCard.js',
   './src/components/Logo.js',
-  './src/components/Splash.js',
   './src/components/JapaCounter.js',
   './src/components/SyncSettings.js',
   './manifest.json',

@@ -9,10 +9,79 @@
   
   <!-- PWA Support -->
   <link rel="manifest" href="./manifest.json">
-  <meta name="theme-color" content="#7A3B5E">
+  <meta name="theme-color" content="#100C1F">
   <link rel="apple-touch-icon" href="./icon-192.png">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  
+  <style>
+    /* Critical Inline Splash Screen Styles (Instant Load) */
+    .splash-overlay {
+      position: fixed;
+      inset: 0;
+      background-color: #100C1F;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity 0.4s ease, visibility 0.4s ease;
+      font-family: 'Inter', sans-serif;
+    }
+    .splash-overlay.splash-fade-out {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .splash-content {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .splash-title {
+      font-family: 'Fraunces', serif;
+      font-size: 32px;
+      color: #FBF1E0;
+      margin: 24px 0 4px;
+      letter-spacing: 0.08em;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: splashFadeIn 0.8s ease 0.5s forwards;
+    }
+    .splash-subtitle {
+      font-family: 'Fraunces', serif;
+      font-style: italic;
+      font-size: 14px;
+      color: #E8923A;
+      margin: 0;
+      letter-spacing: 0.05em;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: splashFadeIn 0.8s ease 0.8s forwards;
+    }
+    @keyframes splashFadeIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .splash-logo-anim {
+      animation: splashScaleIn 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+    .splash-logo-anim .logo-beads-group {
+      transform-origin: 100px 100px;
+      animation: splashRotateBeads 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+    .splash-logo-anim .logo-lotus-group {
+      transform-origin: 100px 100px;
+      transform: scale(0);
+      animation: splashScaleIn 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.35s forwards;
+    }
+    @keyframes splashScaleIn {
+      to { transform: scale(1); }
+    }
+    @keyframes splashRotateBeads {
+      from { transform: rotate(-180deg); opacity: 0; }
+      to { transform: rotate(0deg); opacity: 1; }
+    }
+  </style>
   
   <script>
     if ('serviceWorker' in navigator) {
@@ -40,10 +109,71 @@
   </script>
 </head>
 <body>
-  <div id="root">
-    <div style="display: flex; justify-content: center; align-items: center; height: 100vh; font-family: sans-serif; color: #6B5E4F; background: #F1E9D8;">
-      <p style="font-size: 1.2rem; letter-spacing: 0.05em; font-weight: 500;">Loading Sādhanā Report...</p>
+
+  <!-- Instant-Load HTML/SVG Splash Screen Overlay -->
+  <div id="splash-screen" class="splash-overlay">
+    <div class="splash-content">
+      <svg class="splash-logo-anim" width="150" height="150" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <!-- Outer gold border -->
+        <circle cx="100" cy="100" r="98" fill="none" stroke="#D4AF37" stroke-width="1.5" />
+        <!-- Inner dark-blue shield -->
+        <circle cx="100" cy="100" r="95" fill="#1B183A" stroke="#100C24" stroke-width="2.5" />
+        <!-- Guides -->
+        <circle cx="100" cy="100" r="87" fill="none" stroke="#C5993B" stroke-width="0.8" opacity="0.8" />
+        <circle cx="100" cy="100" r="69" fill="none" stroke="#C5993B" stroke-width="0.8" opacity="0.8" />
+        <!-- 24 gold beads -->
+        <g class="logo-beads-group">
+          <circle cx="178.0" cy="100.0" r="3.5" fill="#C5993B" />
+          <circle cx="175.3" cy="120.2" r="3.5" fill="#C5993B" />
+          <circle cx="167.5" cy="139.0" r="3.5" fill="#C5993B" />
+          <circle cx="155.2" cy="155.2" r="3.5" fill="#C5993B" />
+          <circle cx="139.0" cy="167.5" r="3.5" fill="#C5993B" />
+          <circle cx="120.2" cy="175.3" r="3.5" fill="#C5993B" />
+          <circle cx="100.0" cy="178.0" r="3.5" fill="#C5993B" />
+          <circle cx="79.8" cy="175.3" r="3.5" fill="#C5993B" />
+          <circle cx="61.0" cy="167.5" r="3.5" fill="#C5993B" />
+          <circle cx="44.8" cy="155.2" r="3.5" fill="#C5993B" />
+          <circle cx="32.5" cy="139.0" r="3.5" fill="#C5993B" />
+          <circle cx="24.7" cy="120.2" r="3.5" fill="#C5993B" />
+          <circle cx="22.0" cy="100.0" r="3.5" fill="#C5993B" />
+          <circle cx="24.7" cy="79.8" r="3.5" fill="#C5993B" />
+          <circle cx="32.5" cy="61.0" r="3.5" fill="#C5993B" />
+          <circle cx="44.8" cy="44.8" r="3.5" fill="#C5993B" />
+          <circle cx="61.0" cy="32.5" r="3.5" fill="#C5993B" />
+          <circle cx="79.8" cy="24.7" r="3.5" fill="#C5993B" />
+          <circle cx="100.0" cy="22.0" r="3.5" fill="#C5993B" />
+          <circle cx="120.2" cy="24.7" r="3.5" fill="#C5993B" />
+          <circle cx="139.0" cy="32.5" r="3.5" fill="#C5993B" />
+          <circle cx="155.2" cy="44.8" r="3.5" fill="#C5993B" />
+          <circle cx="167.5" cy="61.0" r="3.5" fill="#C5993B" />
+          <circle cx="175.3" cy="79.8" r="3.5" fill="#C5993B" />
+        </g>
+        <circle cx="100" cy="100" r="32" fill="none" stroke="#C5993B" stroke-width="1" opacity="0.6" />
+        <!-- Lotus Petals -->
+        <g class="logo-lotus-group">
+          <path d="M 100,100 C 90,82 90,56 100,44 C 110,56 110,82 100,100 Z" fill="#D4AF37" transform="rotate(0 100 100) scale(1)" />
+          <path d="M 100,100 C 90,82 90,56 100,44 C 110,56 110,82 100,100 Z" fill="#FFFDF0" transform="rotate(30 100 100) scale(0.85)" />
+          <path d="M 100,100 C 90,82 90,56 100,44 C 110,56 110,82 100,100 Z" fill="#D4AF37" transform="rotate(60 100 100) scale(1)" />
+          <path d="M 100,100 C 90,82 90,56 100,44 C 110,56 110,82 100,100 Z" fill="#FFFDF0" transform="rotate(90 100 100) scale(0.85)" />
+          <path d="M 100,100 C 90,82 90,56 100,44 C 110,56 110,82 100,100 Z" fill="#D4AF37" transform="rotate(120 100 100) scale(1)" />
+          <path d="M 100,100 C 90,82 90,56 100,44 C 110,56 110,82 100,100 Z" fill="#FFFDF0" transform="rotate(150 100 100) scale(0.85)" />
+          <path d="M 100,100 C 90,82 90,56 100,44 C 110,56 110,82 100,100 Z" fill="#D4AF37" transform="rotate(180 100 100) scale(1)" />
+          <path d="M 100,100 C 90,82 90,56 100,44 C 110,56 110,82 100,100 Z" fill="#FFFDF0" transform="rotate(210 100 100) scale(0.85)" />
+          <path d="M 100,100 C 90,82 90,56 100,44 C 110,56 110,82 100,100 Z" fill="#D4AF37" transform="rotate(240 100 100) scale(1)" />
+          <path d="M 100,100 C 90,82 90,56 100,44 C 110,56 110,82 100,100 Z" fill="#FFFDF0" transform="rotate(270 100 100) scale(0.85)" />
+          <path d="M 100,100 C 90,82 90,56 100,44 C 110,56 110,82 100,100 Z" fill="#D4AF37" transform="rotate(300 100 100) scale(1)" />
+          <path d="M 100,100 C 90,82 90,56 100,44 C 110,56 110,82 100,100 Z" fill="#FFFDF0" transform="rotate(330 100 100) scale(0.85)" />
+        </g>
+        <circle cx="100" cy="100" r="14" fill="#E8923A" stroke="#D4AF37" stroke-width="2" />
+        <circle cx="100" cy="100" r="8" fill="#F4B860" opacity="0.8" />
+      </svg>
+      <h1 class="splash-title">Sadhana Card</h1>
+      <p class="splash-subtitle">harer nāmaiva kevalam</p>
     </div>
+  </div>
+
+  <div id="root">
+    <!-- App mounts here -->
   </div>
   
   <script type="module" src="./src/main.js"></script>

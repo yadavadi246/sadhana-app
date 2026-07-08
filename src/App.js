@@ -13,7 +13,7 @@ import {
 
 import { initSyncEngine, uploadDayToCloud, syncAllDaysWithCloud } from './utils/sync.js';
 
-import Splash from './components/Splash.js';
+
 import Hero from './components/Hero.js';
 import StatsStrip from './components/StatsStrip.js';
 import BadgesRow from './components/BadgesRow.js';
@@ -26,7 +26,6 @@ import JapaCounter from './components/JapaCounter.js';
 import SyncSettings from './components/SyncSettings.js';
 
 export default function App() {
-  const [showSplash, setShowSplash] = useState(true);
   const [activeTab, setActiveTab] = useState('tracker'); // 'tracker' | 'japa' | 'sync'
   
   const [selectedDate, setSelectedDate] = useState(() => new Date());
@@ -190,9 +189,7 @@ export default function App() {
     handleChangeField(targetField, currentVal + count);
   };
 
-  if (showSplash) {
-    return html`<${Splash} onComplete=${() => setShowSplash(false)} />`;
-  }
+
 
   return html`
     <div class="page">
@@ -274,10 +271,23 @@ export default function App() {
 
       <!-- FIXED BOTTOM NAVIGATION BAR -->
       <div class="tab-bar">
+        <!-- Sliding indicator pill background -->
+        <div
+          class="tab-indicator-container"
+          style=${{
+            transform: `translateX(${
+              activeTab === 'tracker' ? '0%' : activeTab === 'japa' ? '105%' : '210%'
+            })`
+          }}
+        >
+          <div class="tab-indicator-pill"></div>
+        </div>
+
         <button
           class="tab-btn ${activeTab === 'tracker' ? 'active' : ''}"
           onClick=${() => setActiveTab('tracker')}
           type="button"
+          style=${{ zIndex: 2 }}
         >
           <span class="tab-icon">📇</span>
           <span>Tracker</span>
@@ -286,6 +296,7 @@ export default function App() {
           class="tab-btn ${activeTab === 'japa' ? 'active' : ''}"
           onClick=${() => setActiveTab('japa')}
           type="button"
+          style=${{ zIndex: 2 }}
         >
           <span class="tab-icon">📿</span>
           <span>Japa</span>
@@ -294,6 +305,7 @@ export default function App() {
           class="tab-btn ${activeTab === 'sync' ? 'active' : ''}"
           onClick=${() => setActiveTab('sync')}
           type="button"
+          style=${{ zIndex: 2 }}
         >
           <span class="tab-icon">☁️</span>
           <span>Sync</span>
