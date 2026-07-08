@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sadhana-v4';
+const CACHE_NAME = 'sadhana-v5';
 const ASSETS = [
   './',
   './index.html',
@@ -71,4 +71,11 @@ self.addEventListener('fetch', (e) => {
       }
     })
   );
+});
+
+// Immediate skipWaiting listener
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
 });

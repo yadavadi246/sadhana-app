@@ -86,9 +86,41 @@
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js')
-          .then(reg => console.log('Service worker registered!', reg))
-          .catch(err => console.log('Service worker failed', err));
+        navigator.serviceWorker.register('./sw.js').then((reg) => {
+          console.log('Service worker registered!', reg);
+          
+          // Force activation if there's already an update waiting
+          if (reg.waiting) {
+            console.log('New service worker waiting. Activating...');
+            reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+            return;
+          }
+
+          // Force activation if an update is found during lifecycle
+          reg.onupdatefound = () => {
+            const installingWorker = reg.installing;
+            installingWorker.onstatechange = () => {
+              if (installingWorker.state === 'installed') {
+                if (navigator.serviceWorker.controller) {
+                  console.log('New content available. Activating update...');
+                  if (reg.waiting) {
+                    reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+                  }
+                }
+              }
+            };
+          };
+        }).catch(err => console.log('Service worker failed', err));
+      });
+
+      // Reload page immediately when service worker takes control
+      let refreshing = false;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (!refreshing) {
+          refreshing = true;
+          console.log('Service worker updated. Reloading page...');
+          window.location.reload();
+        }
       });
     }
 
