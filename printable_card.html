@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Śrī Sādhanā Patra (Printable)</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+    :root {
+      --ink: #2F2317;
+      --ink-soft: #7C6955;
+      --parchment: #FCF8F2;
+      --parchment-border: #E8B67D;
+      --vedic-saffron: #D36E2A;
+      --vedic-gold: #C5993B;
+      --line: rgba(211, 110, 42, 0.15);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 40px 20px;
+      background-color: #F6EFE6;
+      color: var(--ink);
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .card-container {
+      width: 100%;
+      max-width: 800px;
+      background-color: var(--parchment);
+      border: 3px double var(--parchment-border);
+      border-radius: 16px;
+      padding: 45px;
+      box-shadow: 0 8px 30px rgba(47, 35, 23, 0.06);
+      position: relative;
+    }
+
+    /* Print guidelines & helper at the top (hidden during print) */
+    .print-banner {
+      background-color: #F8EFE4;
+      border-left: 4px solid var(--vedic-saffron);
+      color: var(--ink-soft);
+      padding: 12px 16px;
+      margin-bottom: 30px;
+      border-radius: 6px;
+      font-size: 13.5px;
+      line-height: 1.5;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .btn-wrap {
+      display: flex;
+      gap: 8px;
+    }
+
+    .print-btn, .png-btn {
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 8px 18px;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      font-size: 13px;
+      transition: background-color 0.2s;
+      box-shadow: 0 2px 6px rgba(211, 110, 42, 0.2);
+    }
+
+    .print-btn {
+      background-color: var(--vedic-saffron);
+    }
+    .print-btn:hover {
+      background-color: #B5581C;
+    }
+
+    .png-btn {
+      background-color: var(--vedic-gold);
+      box-shadow: 0 2px 6px rgba(197, 153, 59, 0.2);
+    }
+    .png-btn:hover {
+      background-color: #A37B2E;
+    }
+
+    /* Vedic Ornamental Header decoration */
+    .vedic-ornament {
+      text-align: center;
+      font-size: 24px;
+      color: var(--vedic-gold);
+      margin-bottom: 8px;
+      line-height: 1;
+      letter-spacing: 0.1em;
+    }
+
+    /* Card Header */
+    header {
+      text-align: center;
+      margin-bottom: 26px;
+    }
+
+    .maha-mantra {
+      font-family: 'Fraunces', serif;
+      font-style: italic;
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      color: var(--vedic-saffron);
+      text-transform: uppercase;
+      margin: 0 0 10px 0;
+      font-weight: 600;
+    }
+
+    h1 {
+      font-family: 'Fraunces', serif;
+      font-size: 32px;
+      font-weight: 700;
+      margin: 0 0 4px 0;
+      letter-spacing: 0.04em;
+      color: var(--ink);
+    }
+
+    .subtitle {
+      font-family: 'Fraunces', serif;
+      font-style: italic;
+      color: var(--ink-soft);
+      font-size: 15px;
+      margin: 0;
+    }
+
+    .meta-fields {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      font-size: 14px;
+      border-bottom: 1px double var(--vedic-saffron);
+      padding-bottom: 12px;
+    }
+
+    .meta-field {
+      flex: 1;
+    }
+
+    .meta-field span {
+      color: var(--ink-soft);
+      font-weight: 600;
+      font-family: 'Fraunces', serif;
+      font-style: italic;
+    }
+
+    .meta-field .line-fill {
+      display: inline-block;
+      width: 170px;
+      border-bottom: 1px solid var(--ink-soft);
+      margin-left: 8px;
+      vertical-align: bottom;
+      height: 18px;
+    }
+
+    /* Card Table Layout */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 26px;
+    }
+
+    th, td {
+      border: 1px solid var(--line);
+      text-align: center;
+      padding: 10px 6px;
+      font-size: 13px;
+    }
+
+    th {
+      font-family: 'Fraunces', serif;
+      font-style: italic;
+      font-weight: 700;
+      color: var(--ink);
+      font-size: 14px;
+      background-color: rgba(232, 182, 125, 0.15);
+    }
+
+    .col-activity {
+      text-align: left;
+      width: 220px;
+      font-weight: 600;
+      padding-left: 14px;
+      border-left: 2px solid var(--vedic-saffron);
+    }
+
+    .group-row {
+      background-color: rgba(232, 182, 125, 0.25);
+      font-family: 'Fraunces', serif;
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      font-weight: 700;
+      color: var(--vedic-saffron);
+      text-align: left;
+      padding: 8px 14px;
+      border-top: 2px solid var(--vedic-saffron);
+    }
+
+    .sublabel {
+      display: block;
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--ink-soft);
+      margin-top: 2px;
+    }
+
+    .empty-cell {
+      height: 38px;
+    }
+
+    /* Shloka Container Styling */
+    .sloka-container {
+      margin: 30px auto 10px;
+      text-align: center;
+      background-color: rgba(232, 182, 125, 0.08);
+      border-left: 3px solid var(--vedic-gold);
+      border-right: 3px solid var(--vedic-gold);
+      padding: 18px 24px;
+      border-radius: 8px;
+      max-width: 680px;
+    }
+
+    .sloka-devanagari {
+      font-family: 'Fraunces', serif;
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--ink);
+      margin-bottom: 6px;
+      line-height: 1.6;
+    }
+
+    .sloka-translit {
+      font-family: 'Fraunces', serif;
+      font-style: italic;
+      font-size: 12.5px;
+      color: var(--vedic-saffron);
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
+
+    .sloka-translation {
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      line-height: 1.5;
+      color: var(--ink-soft);
+      font-weight: 500;
+    }
+
+    /* Print Footer */
+    footer {
+      text-align: center;
+      font-family: 'Fraunces', serif;
+      font-style: italic;
+      font-size: 14px;
+      color: var(--vedic-saffron);
+      margin-top: 24px;
+      letter-spacing: 0.05em;
+    }
+
+    /* PRINT SPECIFIC RULES */
+    @media print {
+      body {
+        background-color: white;
+        color: black;
+        padding: 0;
+      }
+
+      .card-container {
+        border: 2px solid black;
+        box-shadow: none;
+        padding: 20px;
+        max-width: 100%;
+      }
+
+      .print-banner {
+        display: none !important;
+      }
+
+      th, td {
+        border: 1px solid black;
+        color: black;
+        padding: 8px 4px;
+      }
+
+      th {
+        background-color: rgba(0, 0, 0, 0.05) !important;
+      }
+
+      .col-activity {
+        border-left: 2.5px solid black;
+      }
+
+      .group-row {
+        background-color: rgba(0, 0, 0, 0.08) !important;
+        border-top: 1.5px solid black;
+        color: black;
+      }
+
+      .sloka-container {
+        border-left: 2px solid black;
+        border-right: 2px solid black;
+        background-color: transparent !important;
+      }
+
+      .meta-field .line-fill {
+        border-bottom: 1px solid black;
+      }
+
+      .subtitle, footer, .maha-mantra, .sloka-translit {
+        color: black;
+      }
+    }
+  </style>
+  <!-- Load html2canvas via CDN for image export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script>
+    function downloadPNG() {
+      const banner = document.getElementById('printBanner');
+      const card = document.getElementById('cardContainer');
+      
+      // Hide banner so it's not captured in the PNG
+      banner.style.display = 'none';
+      
+      html2canvas(card, {
+        scale: 2.5, // High resolution output
+        useCORS: true,
+        backgroundColor: '#FCF8F2' // var(--parchment)
+      }).then(canvas => {
+        // Show banner again
+        banner.style.display = 'flex';
+        
+        const link = document.createElement('a');
+        link.download = 'sadhana_card.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      }).catch(err => {
+        banner.style.display = 'flex';
+        console.error('PNG export failed', err);
+        alert('Could not download PNG: ' + err.message);
+      });
+    }
+  </script>
+</head>
+<body>
+
+  <div class="card-container" id="cardContainer">
+    <!-- Instruction Banner (Hidden when printing) -->
+    <div class="print-banner" id="printBanner">
+      <div>
+        <strong>Weekly Sādhanā Card:</strong> Print it out or download it as a PNG for offline use.
+      </div>
+      <div class="btn-wrap">
+        <button class="png-btn" onclick="downloadPNG()">Download PNG</button>
+        <button class="print-btn" onclick="window.print()">Print Card</button>
+      </div>
+    </div>
+
+    <!-- Header Section -->
+    <header style="margin-top: 15px;">
+      <div class="maha-mantra">Hare Kṛṣṇa Hare Kṛṣṇa Kṛṣṇa Kṛṣṇa Hare Hare / Hare Rāma Hare Rāma Rāma Rāma Hare Hare</div>
+      <h1>Sādhanā Card</h1>
+      <p class="subtitle">harer nāmaiva kevalam</p>
+    </header>
+
+    <!-- Meta Information Fields -->
+    <div class="meta-fields">
+      <div class="meta-field">
+        <span>Sādhaka Name:</span><div class="line-fill"></div>
+      </div>
+      <div class="meta-field" style="text-align: right;">
+        <span>Week Of:</span><div class="line-fill"></div>
+      </div>
+    </div>
+
+    <!-- Sadhana Matrix Table -->
+    <table>
+      <thead>
+        <tr>
+          <th style="text-align: left; padding-left: 14px;">Spiritual Discipline</th>
+          <th>Mon</th>
+          <th>Tue</th>
+          <th>Wed</th>
+          <th>Thu</th>
+          <th>Fri</th>
+          <th>Sat</th>
+          <th>Sun</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- BEFORE DAWN -->
+        <tr>
+          <td colspan="8" class="group-row">Before Dawn</td>
+        </tr>
+        <tr>
+          <td class="col-activity">
+            Wake-up Time
+            <span class="sublabel">Rising for sādhanā</span>
+          </td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+        </tr>
+        <tr>
+          <td class="col-activity">
+            Morning Chanting
+            <span class="sublabel">Japa rounds before noon</span>
+          </td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+        </tr>
+
+        <!-- MORNING -->
+        <tr>
+          <td colspan="8" class="group-row">Morning</td>
+        </tr>
+        <tr>
+          <td class="col-activity">
+            Maṅgala Ārati
+            <span class="sublabel">Attended? (✓/✗)</span>
+          </td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+        </tr>
+        <tr>
+          <td class="col-activity">
+            Morning Class
+            <span class="sublabel">Attended class? (✓/✗)</span>
+          </td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+        </tr>
+        <tr>
+          <td class="col-activity">
+            Additional Chanting
+            <span class="sublabel">Other rounds chanted</span>
+          </td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+        </tr>
+
+        <!-- COLLEGE CLASSES -->
+        <tr>
+          <td colspan="8" class="group-row">College Classes</td>
+        </tr>
+        <tr>
+          <td class="col-activity">
+            College Time
+          </td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+        </tr>
+
+        <!-- SELF STUDY -->
+        <tr>
+          <td colspan="8" class="group-row">Self-Study</td>
+        </tr>
+        <tr>
+          <td class="col-activity">
+            Study Time
+          </td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+        </tr>
+
+        <!-- DAY & NIGHT -->
+        <tr>
+          <td colspan="8" class="group-row">Day & Night</td>
+        </tr>
+        <tr>
+          <td class="col-activity">
+            Day Sleep
+            <span class="sublabel">Rest time (minutes)</span>
+          </td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+        </tr>
+        <tr>
+          <td class="col-activity">
+            Bedtime
+            <span class="sublabel">Time to sleep (PM/AM)</span>
+          </td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+          <td class="empty-cell"></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Shloka Container for Motivation -->
+    <div class="sloka-container">
+      <div class="sloka-devanagari">श्रद्धावॉंल्लभते ज्ञानं तत्परः संयतेन्द्रियः ।<br>ज्ञानं लब्ध्वा परां शान्तिमचिरेणाधिगच्छति ॥</div>
+      <div class="sloka-translit">śraddhāvān labhate jñānaṁ tat-paraḥ saṁyatendriyaḥ<br>jñānaṁ labdhā parāṁ śāntim acireṇādhigacchati</div>
+      <div class="sloka-translation">"A faithful man who is dedicated to knowledge, and who subdues his senses, achieves this knowledge, and having achieved it, he quickly attains supreme spiritual peace." (Bhagavad Gītā 4.39)</div>
+    </div>
+
+    <!-- Footer decoration -->
+    <footer>✦ kṛṣṇas tu bhagavān svayam ✦</footer>
+  </div>
+
+</body>
+</html>
