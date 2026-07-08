@@ -1,16 +1,11 @@
-// Firebase Firestore Client-side Sync Controller for ESM environment
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
-import { 
-  getFirestore, 
-  doc, 
-  setDoc, 
-  getDoc, 
-  getDocs, 
-  collection 
-} from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+// Dynamic Firebase Imports to prevent script blocks / adblocker crashes
+let firebaseAppModule = null;
+let firebaseFirestoreModule = null;
+
+let db = null;
+let currentSyncCode = null;
 
 // Default Shared Firestore Sandbox Database
-// Users can override this under Settings with their own private Firebase app
 const DEFAULT_FIREBASE_CONFIG = {
   apiKey: "AIzaSyBw-7JbK06sC8gNfF5aD3u9h1vXwY_Z1pA", 
   authDomain: "sadhana-sync-sandbox.firebaseapp.com",
@@ -20,22 +15,21 @@ const DEFAULT_FIREBASE_CONFIG = {
   appId: "1:385720194827:web:2f0367a84bf1d82046bc5e"
 };
 
-let db = null;
-let currentSyncCode = null;
-
 // Initialize the Sync code and Database connection
-export function initSyncEngine() {
+export async function initSyncEngine() {
   // 1. Get or create a random Sync Code (e.g. SDN-5A8F-9C1D)
   let code = localStorage.getItem('sadhana:sync_code');
   if (!code) {
-    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // Avoid ambiguous chars
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
     const randPart = () => Array.from({ length: 4 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
     code = `SDN-${randPart()}-${randPart()}`;
     localStorage.setItem('sadhana:sync_code', code);
   }
   currentSyncCode = code;
 
-  // 2. Load custom config if user provided one, otherwise use default
+  if (db) return db;
+
+  // 2. Load custom config if user provided one
   let config = DEFAULT_FIREBASE_CONFIG;
   const customConfigRaw = localStorage.getItem('sadhana:custom_firebase');
   if (customConfigRaw) {
@@ -46,19 +40,32 @@ export function initSyncEngine() {
     }
   }
 
-  // 3. Connect to Firebase
+  // 3. Dynamic import of Firebase SDKs
   try {
-    const app = initializeApp(config, 'sadhanaSyncApp');
-    db = getFirestore(app);
-    console.log('Firebase Sync Engine initialized successfully. Code:', currentSyncCode);
+    firebaseAppModule = await import('https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js');
+    firebaseFirestoreModule = await import('https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js');
+    
+    const app = firebaseAppModule.initializeApp(config, 'sadhanaSyncApp');
+    db = firebaseFirestoreModule.getFirestore(app);
+    console.log('Firebase Sync Engine initialized via dynamic imports. Code:', currentSyncCode);
+    return db;
   } catch(e) {
-    console.error('Failed to initialize Firebase database connection', e);
+    console.warn('Failed to dynamically load or initialize Firebase. App will operate in offline LocalStorage mode.', e);
+    return null;
   }
 }
 
 export function getSyncCode() {
   if (!currentSyncCode) {
-    initSyncEngine();
+    // Generate code synchronously so we can return it instantly
+    let code = localStorage.getItem('sadhana:sync_code');
+    if (!code) {
+      const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      const randPart = () => Array.from({ length: 4 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+      code = `SDN-${randPart()}-${randPart()}`;
+      localStorage.setItem('sadhana:sync_code', code);
+    }
+    currentSyncCode = code;
   }
   return currentSyncCode;
 }
@@ -72,7 +79,6 @@ export function setSyncCode(code) {
   return false;
 }
 
-// Write the local updates to the outbox queue
 function addToOutbox(dateKey, data) {
   try {
     const outbox = JSON.parse(localStorage.getItem('sadhana:outbox') || '{}');
@@ -83,19 +89,22 @@ function addToOutbox(dateKey, data) {
   }
 }
 
-// Push local update to Firestore
 export async function uploadDayToCloud(dateKey, data) {
-  if (!db) initSyncEngine();
-  if (!db) return false;
+  const activeDb = db || await initSyncEngine();
+  if (!activeDb || !firebaseFirestoreModule) {
+    // Save to local outbox queue to sync later when online/available
+    addToOutbox(dateKey, { ...data, lastModified: data.lastModified || Date.now() });
+    return false;
+  }
 
-  // Track modification timestamp for merge conflict resolution
+  const { doc, setDoc } = firebaseFirestoreModule;
   const enrichedData = {
     ...data,
     lastModified: data.lastModified || Date.now()
   };
 
   try {
-    const docRef = doc(db, 'sadhana_users', currentSyncCode, 'days', dateKey);
+    const docRef = doc(activeDb, 'sadhana_users', currentSyncCode, 'days', dateKey);
     await setDoc(docRef, enrichedData);
     
     // Remove from outbox if successful
@@ -112,18 +121,18 @@ export async function uploadDayToCloud(dateKey, data) {
   }
 }
 
-// Retrieve all records in cloud and run Last-Write-Wins merge
 export async function syncAllDaysWithCloud(onStatusUpdate = () => {}) {
-  if (!db) initSyncEngine();
-  if (!db) {
-    onStatusUpdate('Database not initialized');
+  const activeDb = db || await initSyncEngine();
+  if (!activeDb || !firebaseFirestoreModule) {
+    onStatusUpdate('Sync failed: Firebase modules unreachable (adblocker or offline).');
     return false;
   }
 
+  const { doc, setDoc, getDocs, collection } = firebaseFirestoreModule;
   onStatusUpdate('Connecting to sync repository...');
   
   try {
-    // 1. First push any pending outbox items
+    // 1. Push pending outbox items
     const outbox = JSON.parse(localStorage.getItem('sadhana:outbox') || '{}');
     const outboxKeys = Object.keys(outbox);
     if (outboxKeys.length > 0) {
@@ -135,7 +144,7 @@ export async function syncAllDaysWithCloud(onStatusUpdate = () => {}) {
 
     // 2. Fetch all days from Firestore
     onStatusUpdate('Downloading cloud records...');
-    const colRef = collection(db, 'sadhana_users', currentSyncCode, 'days');
+    const colRef = collection(activeDb, 'sadhana_users', currentSyncCode, 'days');
     const querySnapshot = await getDocs(colRef);
     
     const cloudRecords = {};
@@ -148,10 +157,9 @@ export async function syncAllDaysWithCloud(onStatusUpdate = () => {}) {
     let cloudChangedCount = 0;
 
     // 3. Merge Loop
-    // Loop through all keys in localstorage
     for (let i = 0; i < localStorage.length; i++) {
       const storageKey = localStorage.key(i);
-      if (storageKey.startsWith('sadhana:20')) { // Filter sadhana date records
+      if (storageKey.startsWith('sadhana:20')) {
         const dateKey = storageKey.replace('sadhana:', '');
         const localData = JSON.parse(localStorage.getItem(storageKey));
         const cloudData = cloudRecords[dateKey];
@@ -159,27 +167,23 @@ export async function syncAllDaysWithCloud(onStatusUpdate = () => {}) {
         const localTime = localData.lastModified || 0;
         
         if (!cloudData) {
-          // Exists locally but not in cloud -> Upload to cloud
           await uploadDayToCloud(dateKey, localData);
           cloudChangedCount++;
         } else {
           const cloudTime = cloudData.lastModified || 0;
           if (localTime > cloudTime) {
-            // Local is newer -> Upload to cloud
             await uploadDayToCloud(dateKey, localData);
             cloudChangedCount++;
           } else if (cloudTime > localTime) {
-            // Cloud is newer -> Update local storage
             localStorage.setItem(storageKey, JSON.stringify(cloudData));
             localChangedCount++;
           }
-          // Remove from cloud list so we know what remains
           delete cloudRecords[dateKey];
         }
       }
     }
 
-    // Any remaining cloud records that aren't in local storage -> Download them
+    // Download any remaining cloud records
     const remainingCloudKeys = Object.keys(cloudRecords);
     for (const dateKey of remainingCloudKeys) {
       localStorage.setItem(`sadhana:${dateKey}`, JSON.stringify(cloudRecords[dateKey]));
