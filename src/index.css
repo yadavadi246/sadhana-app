@@ -435,3 +435,615 @@ footer { text-align: center; margin-top: 30px; font-family: 'Fraunces', serif; f
   .row-main { flex-direction: column; align-items: flex-start; }
   .label-block { width: 100%; }
 }
+
+/* ---------- SPLASH SCREEN ---------- */
+.splash-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: #100C1F;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+.splash-overlay.splash-fade-out {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.splash-content {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.splash-title {
+  font-family: 'Fraunces', serif;
+  font-size: 32px;
+  color: #FBF1E0;
+  margin: 20px 0 4px;
+  letter-spacing: 0.1em;
+  opacity: 0;
+  animation: fadeInText 1s ease 0.6s forwards;
+}
+.splash-subtitle {
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: #E8923A;
+  margin: 0;
+  letter-spacing: 0.05em;
+  opacity: 0;
+  animation: fadeInText 1s ease 0.9s forwards;
+}
+@keyframes fadeInText {
+  to { opacity: 1; transform: translateY(0); }
+}
+.splash-title, .splash-subtitle {
+  transform: translateY(10px);
+}
+
+/* Splash Logo Animations */
+.splash-logo-anim {
+  animation: scaleIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+.splash-logo-anim .logo-beads-group {
+  animation: rotateBeads 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+.splash-logo-anim .logo-lotus-group {
+  transform: scale(0);
+  animation: scaleIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.4s forwards;
+}
+@keyframes scaleIn {
+  to { transform: scale(1); }
+}
+@keyframes rotateBeads {
+  from { transform: rotate(-180deg); opacity: 0; }
+  to { transform: rotate(0deg); opacity: 1; }
+}
+
+/* ---------- TAB NAV BAR ---------- */
+.tab-bar {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 640px;
+  height: 64px;
+  background-color: var(--parchment);
+  border-top: 1px solid var(--line);
+  box-shadow: 0 -4px 15px rgba(42,33,24,0.05);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 99;
+  padding: 0 10px;
+}
+.tab-btn {
+  flex: 1;
+  height: 100%;
+  border: none;
+  background: transparent;
+  color: var(--ink-soft);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: color 0.2s, transform 0.1s;
+}
+.tab-btn:active {
+  transform: scale(0.95);
+}
+.tab-btn.active {
+  color: var(--saffron);
+}
+.tab-icon {
+  font-size: 20px;
+}
+/* Ensure the page wrapper has padding at the bottom to avoid overlapping with tab bar */
+.page {
+  padding-bottom: 90px !important;
+}
+
+/* ---------- JAPA COUNTER ---------- */
+.japa-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 0;
+}
+.japa-ring-wrap {
+  position: relative;
+  width: 290px;
+  height: 290px;
+  margin-bottom: 20px;
+}
+.japa-ring-svg {
+  width: 100%;
+  height: 100%;
+}
+.japa-active-bead {
+  animation: activeBeadPulse 1.2s ease-in-out infinite alternate;
+}
+@keyframes activeBeadPulse {
+  from { r: 3.5; fill: #E8923A; filter: drop-shadow(0 0 2px rgba(232, 146, 58, 0.8)); }
+  to { r: 5.5; fill: #F4B860; filter: drop-shadow(0 0 6px rgba(244, 184, 96, 1)); }
+}
+.japa-click-btn {
+  position: absolute;
+  inset: 42px;
+  border-radius: 50%;
+  border: 4px solid #D4AF37;
+  background: radial-gradient(circle, #FCF8F2, #EFEADF 70%);
+  box-shadow: 0 6px 18px rgba(47,35,23,0.12), inset 0 2px 5px rgba(255,255,255,0.8);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.08s ease, box-shadow 0.08s;
+  overflow: hidden;
+}
+.japa-click-btn:active {
+  box-shadow: 0 2px 6px rgba(47,35,23,0.1), inset 0 4px 8px rgba(0,0,0,0.05);
+}
+.btn-petals {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.btn-bead-info {
+  text-align: center;
+  z-index: 2;
+}
+.bead-fraction {
+  display: block;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.bead-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-soft);
+  font-weight: 700;
+}
+.japa-rounds-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 320px;
+  background-color: var(--parchment);
+  border: 1px solid var(--line);
+  padding: 10px 18px;
+  border-radius: 30px;
+  box-shadow: var(--shadow);
+  margin-bottom: 24px;
+}
+.rounds-text {
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--ink);
+}
+.japa-save-btn {
+  background: linear-gradient(120deg, var(--dawn-mid), var(--saffron));
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(232, 146, 58, 0.2);
+}
+.japa-console {
+  width: 100%;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.console-row {
+  display: flex;
+  justify-content: space-around;
+  background: var(--parchment);
+  border: 1px solid var(--line);
+  padding: 10px;
+  border-radius: 12px;
+}
+.config-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+.config-label input[type="checkbox"] {
+  cursor: pointer;
+  accent-color: var(--saffron);
+}
+
+/* Tanpura Console Panel */
+.tanpura-panel {
+  background: var(--parchment);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 14px 18px;
+  box-shadow: var(--shadow);
+}
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+  font-size: 13.5px;
+  color: var(--ink);
+  margin-bottom: 12px;
+}
+.drone-toggle-btn {
+  border: 1px solid var(--line);
+  background: white;
+  color: var(--ink-soft);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.drone-toggle-btn.playing {
+  background: var(--tulsi-bg);
+  color: var(--tulsi);
+  border-color: var(--tulsi);
+  box-shadow: 0 0 8px rgba(79,107,74,0.2);
+}
+.panel-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: opacity 0.25s;
+}
+.slider-control, .select-control {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.slider-label, .select-label {
+  font-size: 12px;
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+.slider-control input[type="range"] {
+  width: 140px;
+  accent-color: var(--saffron);
+  cursor: pointer;
+}
+.select-control select {
+  padding: 4px 18px 4px 8px;
+  font-size: 12px;
+  border-radius: 6px;
+}
+.reset-wrap {
+  text-align: center;
+  font-size: 12px;
+}
+.japa-reset-link {
+  background: none;
+  border: none;
+  color: var(--ink-soft);
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 12px;
+}
+.bullet-sep {
+  color: var(--line);
+  margin: 0 8px;
+}
+
+/* ---------- DATABASE SYNC ---------- */
+.sync-settings {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 10px 0;
+}
+.sync-header h2 {
+  font-family: 'Fraunces', serif;
+  font-size: 22px;
+  margin: 0 0 6px;
+}
+.sync-desc {
+  font-size: 13.5px;
+  color: var(--ink-soft);
+  margin: 0;
+  line-height: 1.5;
+}
+.sync-card, .link-card {
+  background-color: var(--parchment);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px;
+  border: 1px solid var(--line);
+}
+.card-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ink-soft);
+  font-weight: 700;
+  display: block;
+  margin-bottom: 8px;
+}
+.code-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  border: 1.5px dashed var(--parchment-border, #E8B67D);
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+.code-text {
+  font-family: 'IBM Plex Mono', monospace;
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--saffron);
+  letter-spacing: 0.05em;
+  cursor: pointer;
+}
+.copy-btn {
+  background: var(--clay-bg);
+  border: none;
+  color: var(--clay);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.card-hint {
+  font-size: 11.5px;
+  color: var(--ink-soft);
+  margin: 8px 0 0;
+  line-height: 1.4;
+}
+.link-card h3 {
+  margin: 0 0 10px 0;
+  font-size: 14px;
+}
+.link-input-group {
+  display: flex;
+  gap: 8px;
+}
+.link-input-group input {
+  flex: 1;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 14px;
+}
+.link-input-group button {
+  background: var(--ink);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.link-input-group button:disabled {
+  opacity: 0.5;
+}
+.sync-trigger-section {
+  text-align: center;
+}
+.sync-now-btn {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(120deg, var(--dawn-mid), var(--saffron));
+  color: white;
+  border: none;
+  border-radius: 30px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: transform 0.15s;
+}
+.sync-now-btn:active {
+  transform: scale(0.98);
+}
+.sync-now-btn.syncing {
+  opacity: 0.7;
+  cursor: wait;
+}
+.sync-status-box {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+.advanced-section {
+  margin-top: 10px;
+}
+.advanced-toggle {
+  background: none;
+  border: none;
+  color: var(--ink-soft);
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+}
+.advanced-content {
+  background: var(--parchment);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px;
+  margin-top: 8px;
+  font-size: 12px;
+  line-height: 1.4;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.advanced-content textarea {
+  width: 100%;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 6px;
+  background: white;
+}
+.save-custom-btn {
+  background-color: var(--clay);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  align-self: flex-end;
+}
+
+/* ---------- PARALLAX WEATHER ENGINE ---------- */
+.weather-pill {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: white;
+  border-radius: 20px;
+  padding: 3px 8px;
+  font-size: 11.5px;
+  font-weight: 700;
+  font-family: 'IBM Plex Mono', monospace;
+  backdrop-filter: blur(2px);
+}
+.hero-top-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+  margin-bottom: 4px;
+}
+
+/* Sky Time Gradients */
+.sky-dawn {
+  background: linear-gradient(180deg, #1C0F32 0%, #7E2C59 60%, #E2934D 100%) !important;
+  background-size: 100% 100% !important;
+  animation: none !important;
+}
+.sky-morning {
+  background: linear-gradient(180deg, #4A90E2 0%, #87CEEB 60%, #FFF4D0 100%) !important;
+  background-size: 100% 100% !important;
+  color: #100C24 !important;
+  animation: none !important;
+}
+.sky-morning .eyebrow, .sky-morning .hero-date, .sky-morning .reset-link { color: #2A2118 !important; }
+.sky-morning .nav-btn, .sky-morning .date-pill-label, .sky-morning .today-btn {
+  border-color: rgba(42,33,24,0.25) !important;
+  background: rgba(255,255,255,0.25) !important;
+  color: #2A2118 !important;
+}
+.sky-morning .weather-pill {
+  background: rgba(0,0,0,0.06);
+  border-color: rgba(0,0,0,0.12);
+  color: #2A2118;
+}
+.sky-afternoon {
+  background: linear-gradient(180deg, #3A7BD5 0%, #3A6073 100%) !important;
+  background-size: 100% 100% !important;
+  animation: none !important;
+}
+.sky-evening {
+  background: linear-gradient(180deg, #1A0B2E 0%, #D84B20 80%, #F5A623 100%) !important;
+  background-size: 100% 100% !important;
+  animation: none !important;
+}
+.sky-night {
+  background: linear-gradient(180deg, #0A071E 0%, #15103E 60%, #2E1B4E 100%) !important;
+  background-size: 100% 100% !important;
+  animation: none !important;
+}
+
+/* Rain Particle Overlay */
+.rain-drop {
+  position: absolute;
+  width: 1px;
+  height: 12px;
+  background: linear-gradient(transparent, rgba(255,255,255,0.4));
+  transform: rotate(15deg);
+  top: -15px;
+  animation: fallRain linear infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+@keyframes fallRain {
+  to { transform: translate(60px, 230px) rotate(15deg); }
+}
+
+/* Snow Particle Overlay */
+.snowflake {
+  position: absolute;
+  color: white;
+  font-size: 8px;
+  top: -12px;
+  animation: fallSnow ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.75;
+}
+@keyframes fallSnow {
+  0% { transform: translateY(0) translateX(0) rotate(0deg); }
+  50% { transform: translateY(110px) translateX(12px) rotate(180deg); }
+  100% { transform: translateY(220px) translateX(-12px) rotate(360deg); }
+}
+
+/* Heatwave Undulating Overlay */
+.heatwave-overlay {
+  position: absolute;
+  inset: 0;
+  background: transparent;
+  backdrop-filter: contrast(0.96) saturate(1.04);
+  pointer-events: none;
+  animation: heatwaveWiggle 4s ease-in-out infinite alternate;
+  z-index: 1;
+}
+@keyframes heatwaveWiggle {
+  0% { transform: skewX(-0.5deg) scaleY(1.0); }
+  100% { transform: skewX(0.5deg) scaleY(1.02); }
+}
+
+/* Thunderstorm Lightning Flash */
+.thunder-active {
+  animation: lightningFlash 8s linear infinite;
+}
+@keyframes lightningFlash {
+  0%, 94%, 96%, 100% { filter: brightness(1.0) contrast(1.0); }
+  95% { filter: brightness(2.1) contrast(1.1); }
+  95.4% { filter: brightness(1.2) contrast(1.0); }
+  95.8% { filter: brightness(1.9) contrast(1.15); }
+}
+

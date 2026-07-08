@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sadhana-v2';
+const CACHE_NAME = 'sadhana-v3';
 const ASSETS = [
   './',
   './index.html',
@@ -7,6 +7,8 @@ const ASSETS = [
   './src/html.js',
   './src/App.js',
   './src/utils/storage.js',
+  './src/utils/audio.js',
+  './src/utils/sync.js',
   './src/components/Hero.js',
   './src/components/StatsStrip.js',
   './src/components/BadgesRow.js',
@@ -14,6 +16,10 @@ const ASSETS = [
   './src/components/Timeline.js',
   './src/components/ExportModal.js',
   './src/components/ReportCard.js',
+  './src/components/Logo.js',
+  './src/components/Splash.js',
+  './src/components/JapaCounter.js',
+  './src/components/SyncSettings.js',
   './manifest.json',
   './icon-192.png',
   './icon-512.png',
@@ -21,8 +27,11 @@ const ASSETS = [
   'https://esm.sh/preact@10.19.2/hooks',
   'https://esm.sh/htm@3.1.1',
   'https://esm.sh/html2canvas@1.4.1',
-  'https://esm.sh/jspdf@2.5.1'
+  'https://esm.sh/jspdf@2.5.1',
+  'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js',
+  'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js'
 ];
+
 
 self.addEventListener('install', (e) => {
   e.waitUntil(
