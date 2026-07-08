@@ -1051,3 +1051,66 @@ footer { text-align: center; margin-top: 30px; font-family: 'Fraunces', serif; f
   95.8% { filter: brightness(1.9) contrast(1.15); }
 }
 
+/* ---------- PWA DOWNLOAD CARD ---------- */
+.pwa-download-card {
+  border-left: 4px solid var(--saffron);
+}
+.download-title {
+  font-family: 'Fraunces', serif;
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  color: var(--ink);
+}
+.install-pwa-btn {
+  width: 100%;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(120deg, var(--saffron), #7A3B5E);
+  color: white;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(232, 146, 58, 0.15);
+  transition: transform 0.15s ease, opacity 0.15s;
+}
+.install-pwa-btn:active {
+  transform: scale(0.98);
+}
+.installed-success-tag {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--tulsi-bg);
+  color: var(--tulsi);
+  border: 1px solid rgba(79, 107, 74, 0.2);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 700;
+}
+.installed-success-tag .check-icon {
+  font-size: 16px;
+}
+.manual-install-guides {
+  background-color: rgba(42, 33, 24, 0.03);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 12px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+}
+.guide-item strong {
+  display: block;
+  font-size: 12.5px;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.guide-item span {
+  display: block;
+  font-size: 11.5px;
+}
+

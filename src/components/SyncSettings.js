@@ -11,10 +11,26 @@ export default function SyncSettings() {
   const [customFirebase, setCustomFirebase] = useState('');
   const [isCustomOpen, setIsCustomOpen] = useState(false);
 
+  // PWA installation states
+  const [installPrompt, setInstallPrompt] = useState(window.deferredPrompt);
+  const [isAlreadyInstalled, setIsAlreadyInstalled] = useState(false);
+
   useEffect(() => {
     setLocalSyncCode(getSyncCode());
     const savedCustom = localStorage.getItem('sadhana:custom_firebase') || '';
     setCustomFirebase(savedCustom);
+
+    // Check if running in standalone mode (PWA active)
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+    setIsAlreadyInstalled(!!isStandalone);
+
+    const handlePrompt = () => {
+      setInstallPrompt(window.deferredPrompt);
+      console.log('SyncSettings captured updated install prompt!');
+    };
+    
+    window.addEventListener('pwa-prompt-available', handlePrompt);
+    return () => window.removeEventListener('pwa-prompt-available', handlePrompt);
   }, []);
 
   const handleCopyCode = async () => {
@@ -85,11 +101,59 @@ export default function SyncSettings() {
     }
   };
 
+  const handleInstallApp = async () => {
+    const promptEvent = installPrompt || window.deferredPrompt;
+    if (!promptEvent) {
+      alert('Install prompt not triggered by browser yet. Please use the instructions below.');
+      return;
+    }
+    
+    promptEvent.prompt();
+    const { outcome } = await promptEvent.userChoice;
+    console.log(`User response to install prompt: ${outcome}`);
+    if (outcome === 'accepted') {
+      window.deferredPrompt = null;
+      setInstallPrompt(null);
+      setIsAlreadyInstalled(true);
+    }
+  };
+
   return html`
     <div class="sync-settings">
       <div class="sync-header">
-        <h2>Database Cloud Sync</h2>
-        <p class="sync-desc">Backup your entries and synchronize them across your computer, phone, or other tablets in real-time.</p>
+        <h2>App Installation & Sync</h2>
+        <p class="sync-desc">Configure automatic database syncing and install the app onto your home screen for quick access.</p>
+      </div>
+
+      <!-- PWA DOWNLOAD APP SECTION -->
+      <div class="sync-card pwa-download-card">
+        <span class="card-label">Download App (One-Click)</span>
+        <h3 class="download-title">Add to Home Screen</h3>
+        <p class="card-hint" style=${{ marginBottom: '14px', fontSize: '13px' }}>
+          Get instant startup, fullscreen standalone mode (no browser top bars), and offline storage by downloading the app directly to your home screen.
+        </p>
+
+        ${isAlreadyInstalled ? html`
+          <div class="installed-success-tag">
+            <span class="check-icon">✓</span> App Installed & Running Standalone
+          </div>
+        ` : installPrompt ? html`
+          <button class="install-pwa-btn" onClick=${handleInstallApp} type="button">
+            📥 Download & Install App
+          </button>
+        ` : html`
+          <!-- Manual Guidelines card -->
+          <div class="manual-install-guides">
+            <div class="guide-item">
+              <strong>Android (Chrome)</strong>
+              <span>Tap the <strong>three dots</strong> in Chrome's top-right, then select <strong>Install app</strong> or <strong>Add to Home Screen</strong>.</span>
+            </div>
+            <div class="guide-item" style=${{ borderTop: '1.2px solid rgba(42,33,24,0.06)', paddingTop: '10px', marginTop: '10px' }}>
+              <strong>iPhone / iPad (Safari)</strong>
+              <span>Tap the <strong>Share</strong> icon (square with arrow) at the bottom, then scroll down and select <strong>Add to Home Screen</strong>.</span>
+            </div>
+          </div>
+        `}
       </div>
 
       <!-- Sync Code Display card -->
