@@ -276,7 +276,7 @@ export default function App() {
           class="tab-indicator-container"
           style=${{
             transform: `translateX(${
-              activeTab === 'tracker' ? '0%' : activeTab === 'japa' ? '105%' : '210%'
+              activeTab === 'tracker' ? '0%' : activeTab === 'japa' ? '100%' : '200%'
             })`
           }}
         >
