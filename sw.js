@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sadhana-v6';
+const CACHE_NAME = 'sadhana-v7';
 const ASSETS = [
   './',
   './index.html',
@@ -20,8 +20,7 @@ const ASSETS = [
   './src/components/JapaCounter.js',
   './src/components/SyncSettings.js',
   './manifest.json',
-  './icon-192.png',
-  './icon-512.png',
+  './app-icon.jpg',
   'https://esm.sh/preact@10.19.2',
   'https://esm.sh/preact@10.19.2/hooks',
   'https://esm.sh/htm@3.1.1',
