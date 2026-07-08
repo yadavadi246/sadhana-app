@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sadhana-v5';
+const CACHE_NAME = 'sadhana-v6';
 const ASSETS = [
   './',
   './index.html',

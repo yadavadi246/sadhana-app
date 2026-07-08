@@ -14,6 +14,7 @@ export default function SyncSettings() {
   // PWA installation states
   const [installPrompt, setInstallPrompt] = useState(window.deferredPrompt);
   const [isAlreadyInstalled, setIsAlreadyInstalled] = useState(false);
+  const [showManualGuide, setShowManualGuide] = useState(false);
 
   useEffect(() => {
     setLocalSyncCode(getSyncCode());
@@ -104,7 +105,7 @@ export default function SyncSettings() {
   const handleInstallApp = async () => {
     const promptEvent = installPrompt || window.deferredPrompt;
     if (!promptEvent) {
-      alert('Install prompt not triggered by browser yet. Please use the instructions below.');
+      setShowManualGuide(true);
       return;
     }
     
@@ -115,6 +116,7 @@ export default function SyncSettings() {
       window.deferredPrompt = null;
       setInstallPrompt(null);
       setIsAlreadyInstalled(true);
+      setShowManualGuide(false);
     }
   };
 
@@ -137,22 +139,23 @@ export default function SyncSettings() {
           <div class="installed-success-tag">
             <span class="check-icon">✓</span> App Installed & Running Standalone
           </div>
-        ` : installPrompt ? html`
+        ` : html`
           <button class="install-pwa-btn" onClick=${handleInstallApp} type="button">
             📥 Download & Install App
           </button>
-        ` : html`
-          <!-- Manual Guidelines card -->
-          <div class="manual-install-guides">
-            <div class="guide-item">
-              <strong>Android (Chrome)</strong>
-              <span>Tap the <strong>three dots</strong> in Chrome's top-right, then select <strong>Install app</strong> or <strong>Add to Home Screen</strong>.</span>
+
+          ${showManualGuide ? html`
+            <div class="manual-install-guides" style=${{ marginTop: '12px' }}>
+              <div class="guide-item">
+                <strong>Android (Chrome)</strong>
+                <span>Tap the <strong>three dots</strong> in Chrome's top-right, then select <strong>Install app</strong> or <strong>Add to Home Screen</strong>.</span>
+              </div>
+              <div class="guide-item" style=${{ borderTop: '1.2px solid rgba(42,33,24,0.06)', paddingTop: '10px', marginTop: '10px' }}>
+                <strong>iPhone / iPad (Safari)</strong>
+                <span>Tap the <strong>Share</strong> icon (square with arrow) at the bottom, then scroll down and select <strong>Add to Home Screen</strong>.</span>
+              </div>
             </div>
-            <div class="guide-item" style=${{ borderTop: '1.2px solid rgba(42,33,24,0.06)', paddingTop: '10px', marginTop: '10px' }}>
-              <strong>iPhone / iPad (Safari)</strong>
-              <span>Tap the <strong>Share</strong> icon (square with arrow) at the bottom, then scroll down and select <strong>Add to Home Screen</strong>.</span>
-            </div>
-          </div>
+          ` : ''}
         `}
       </div>
 
